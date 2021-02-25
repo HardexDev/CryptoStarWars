@@ -5,6 +5,8 @@
  */
 package cryptostarwars;
 
+import java.io.IOException;
+
 /**
  *
  * @author Alexis Robin
@@ -14,8 +16,9 @@ public class CryptoStarWars {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) throws IOException {
+        Communication com = new Communication();
+        com.start();
     }
     
 }

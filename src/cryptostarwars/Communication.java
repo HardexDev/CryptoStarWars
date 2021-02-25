@@ -53,8 +53,11 @@ public class Communication {
         this.connexion();
         //Création des gestoionnaires des flux de communication
         this.creationFlux();
-        this.envoyerMessage("ANEWHOPE");
+        this.envoyerMessage("For the Emperor");
         messageRecu = this.recevoirMessage();
-
+        while (!messageRecu.equals("END")){
+            this.envoyerMessage(messageRecu);
+            messageRecu = this.recevoirMessage();
+        }
     }
 }
