@@ -1,4 +1,9 @@
-package cryptostarwars.communication;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package cryptostarwars.connexion;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,27 +11,21 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
- * @author Alexis Robin
+ * @author jules
  */
-public class Communication {
-    // Adresse IP locale
-    private Socket socket;
+public class Connexion {
+    private String motDePasse;
+    private Socket socket; // Adresse IP locale
     private BufferedReader fluxEntrant;
     private PrintWriter fluxSortant;
     private boolean isDiscussionTerminee; //La discussion avec le serveur est-elle terminée
     private String messageEnvoye; //Dernier message envoyé au serveur (ou devant être envoyé)
     private String messageRecu;
     
-    public Communication(){
-        
+    public Connexion(String motDePasse){
+        this.motDePasse = motDePasse;
     }
     
     /**
@@ -80,7 +79,7 @@ public class Communication {
         this.connexion();
         //Création des gestoionnaires des flux de communication
         this.creationFlux();
-        this.envoyerMessage("For the Emperor");
+        this.envoyerMessage(this.motDePasse);
         messageRecu = this.recevoirMessage();
         while (!messageRecu.equals("END")){
             this.envoyerMessage(messageRecu);

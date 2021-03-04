@@ -5,7 +5,8 @@
  */
 package cryptostarwars;
 
-import cryptostarwars.communication.Communication;
+import cryptostarwars.modules.Module;
+import cryptostarwars.modules.communication.Communication;
 import java.io.IOException;
 
 /**
@@ -18,7 +19,7 @@ public class CryptoStarWars {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        Communication com = new Communication();
-        com.start();
+        Module communication = new Communication();
+        communication.connexionPhase3();
     }
 }
