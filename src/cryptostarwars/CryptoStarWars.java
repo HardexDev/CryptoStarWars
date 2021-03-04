@@ -5,6 +5,7 @@
  */
 package cryptostarwars;
 
+import cryptostarwars.communication.Communication;
 import java.io.IOException;
 
 /**
@@ -20,5 +21,4 @@ public class CryptoStarWars {
         Communication com = new Communication();
         com.start();
     }
-    
 }
