@@ -38,5 +38,10 @@ public class Communication implements Module {
     public void connexionPhase3() throws IOException {
         Connexion connexion = new Connexion("For the Emperor");
         connexion.start();
+        String messageRecu = connexion.recevoirMessage();
+        while (!messageRecu.equals("END")){
+            connexion.envoyerMessage(messageRecu);
+            messageRecu = connexion.recevoirMessage();
+        }
     }
 }

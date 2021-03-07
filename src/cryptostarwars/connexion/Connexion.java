@@ -80,10 +80,5 @@ public class Connexion {
         //Création des gestoionnaires des flux de communication
         this.creationFlux();
         this.envoyerMessage(this.motDePasse);
-        messageRecu = this.recevoirMessage();
-        while (!messageRecu.equals("END")){
-            this.envoyerMessage(messageRecu);
-            messageRecu = this.recevoirMessage();
-        }
     }
 }

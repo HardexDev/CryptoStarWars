@@ -29,16 +29,29 @@ public class MotBinaire {
     //Constructeur à partir d'un long
     public MotBinaire(long valeur) {
         //TODO
+        this.taille = 64;
+        long[] tab = new long[1];
+        tab[0] = valeur;
+        this.listeBits = BitSet.valueOf(tab);
     }
     
     //Constructeur à partir d'un byte
     public MotBinaire(byte b) {
         //TODO
+        byte[] tab = new byte[1];
+        tab[0] = b;
+        this.taille = 8;
+        this.listeBits = BitSet.valueOf(tab);
     }
     
     //Constructeur à partir d'un caractère (UTF-8)
     public MotBinaire(char c) {
         //TODO
+        this.taille = 8;
+        long code = (long)c;
+        long[] tab = new long[1];
+        tab[0] = code;
+        this.listeBits = BitSet.valueOf(tab);
     }
     
     //Constructeur à partir d'une succession de 1 et de 0 
@@ -74,7 +87,12 @@ public class MotBinaire {
      */
     public int asInteger() {
         //TODO
-        return 0;
+        int res = 0;
+        for (int i=0; i<this.taille; i++) {
+            int bitValue = (this.listeBits.get(i)) ? 1 : 0;
+            res += bitValue * Math.pow(2, i);
+        }
+        return res;
     }
     /**
      * Interprète le MotBinaire comme une succession de caractère encodé chacun sur 8bits (UTF-8)
@@ -82,7 +100,20 @@ public class MotBinaire {
      */
     public String asString()  {
         //TODO
-        return null;
+        String res = "";
+        BitSet b = new BitSet();
+        int step = 0;
+        for (int i=0; i<this.taille/8; i++) {
+            for (int j=0; j<8; j++) {
+                b.set(j, this.listeBits.get(j+step));
+            }
+            MotBinaire m = new MotBinaire(b, 8);
+            res += (char) m.asInteger();
+            step += 8;
+            b = new BitSet();
+        }
+
+        return res;
     }
     
     //Affichage en binaire (i.e : 6 -> "110")
