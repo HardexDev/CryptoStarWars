@@ -29,7 +29,7 @@ public class MotBinaire {
     //Constructeur à partir d'un long
     public MotBinaire(long valeur) {
         //TODO
-        this.taille = 64;
+        this.taille = 32;
         long[] tab = new long[1];
         tab[0] = valeur;
         this.listeBits = BitSet.valueOf(tab);
@@ -100,7 +100,7 @@ public class MotBinaire {
      */
     public String asString()  {
         //TODO
-        String res = "";
+        String s = "";
         BitSet b = new BitSet();
         int step = 0;
         for (int i=0; i<this.taille/8; i++) {
@@ -108,9 +108,15 @@ public class MotBinaire {
                 b.set(j, this.listeBits.get(j+step));
             }
             MotBinaire m = new MotBinaire(b, 8);
-            res += (char) m.asInteger();
+            s += (char) m.asInteger();
             step += 8;
             b = new BitSet();
+        }
+
+        String res = "";
+
+        for (int i=s.length()-1; i>=0; i--) {
+            res += s.charAt(i);
         }
 
         return res;
