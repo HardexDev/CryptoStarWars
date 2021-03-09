@@ -5,7 +5,6 @@
  */
 package cryptostarwars.modules.conversions;
 
-import com.sun.deploy.util.StringUtils;
 import cryptostarwars.connexion.Connexion;
 import cryptostarwars.modules.Module;
 import cryptostarwars.moteur_binaire.MotBinaire;
