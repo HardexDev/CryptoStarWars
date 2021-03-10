@@ -59,7 +59,7 @@ public class MotBinaire {
         this();
         this.taille = S.length();
         for(int i=0;i<this.taille;i++) {
-            this.listeBits.set(this.taille-i-1,S.charAt(i)=='1');
+            this.listeBits.set(this.taille - i - 1, S.charAt(i) == '1');
         }
     }
     
@@ -143,8 +143,9 @@ public class MotBinaire {
      * @return le résultat du xor
      */
     public MotBinaire xor(MotBinaire mot2) {
-        //TODO
-        return null;
+        MotBinaire mb = this;
+        mb.getBitSet().xor(mot2.getBitSet());
+        return mb;
     }
     
     /**
@@ -153,8 +154,25 @@ public class MotBinaire {
      * @return le résultat de l'addition
      */
      public MotBinaire additionMod2p32(MotBinaire mot2) {
-         //TODO
-         return null;
+        String resultat = ""; 
+        int retenue = 0;
+
+        for (int i = 31; i >= 0; i--) {
+            int b1 = this.listeBits.get(i) == true ? 1 : 0;
+            int b2 = mot2.getBitSet().get(i) == true ? 1 : 0;
+            int res = b1 + b2 + retenue;
+            
+            System.out.println(b1 + " + " + b2);
+            
+            if (res > 1)
+                retenue = 1;
+            else 
+                retenue = 0;
+            
+            resultat += String.valueOf(res % 2);
+        }
+         
+        return new MotBinaire(resultat);
      }
     
      /**
