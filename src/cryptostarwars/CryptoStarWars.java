@@ -10,6 +10,8 @@ import cryptostarwars.modules.communication.Communication;
 import cryptostarwars.modules.conversions.Conversions;
 import cryptostarwars.modules.operations.Operations;
 import cryptostarwars.modules.permutation.Permutation;
+import cryptostarwars.modules.s_box.SBox;
+
 import java.io.IOException;
 
 /**
@@ -22,8 +24,7 @@ public class CryptoStarWars {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        Module permutation = new Permutation();
-        permutation.connexionPhase2();
-        
+        Module sbox = new SBox();
+        sbox.connexionPhase2();
     }
 }
