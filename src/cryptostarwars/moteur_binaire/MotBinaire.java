@@ -162,8 +162,6 @@ public class MotBinaire {
             int b2 = mot2.getBitSet().get(i) == true ? 1 : 0;
             int res = b1 + b2 + retenue;
             
-            System.out.println(b1 + " + " + b2);
-            
             if (res > 1)
                 retenue = 1;
             else 
@@ -181,8 +179,19 @@ public class MotBinaire {
       * @return la liste des morceaux
       */
      public ArrayList<MotBinaire> scinder(int tailleMorceau) {
-        //TODO
-        return null;
+        BitSet b1 = new BitSet();
+        BitSet b2 = new BitSet();
+        
+        for(int i=0; i<tailleMorceau; i++){
+           b1.set(i, this.listeBits.get(i));
+           b2.set(i, this.listeBits.get(i+tailleMorceau));
+        }
+        
+        ArrayList<MotBinaire> list = new ArrayList<>();
+        list.add(new MotBinaire(b1, tailleMorceau));
+        list.add(new MotBinaire(b2, tailleMorceau));
+
+        return list;
     }
      
      /**
@@ -191,8 +200,14 @@ public class MotBinaire {
       * @return le résultat de la concaténation
       */
      public MotBinaire concatenation(MotBinaire mot) {
-         //TODO
-	return null;
+        MotBinaire mb = new MotBinaire(new BitSet(64), 64);
+        
+        for (int i = 0 ; i < 32; i++) {
+            mb.getBitSet().set(i, this.listeBits.get(i));
+            mb.getBitSet().set(i + 32, mot.getBitSet().get(i));
+        }
+        
+	return mb;
      }
      
 }
