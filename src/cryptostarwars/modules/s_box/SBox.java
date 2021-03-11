@@ -20,7 +20,7 @@ public class SBox implements Module {
     @Override
     public void connexionPhase2() throws IOException {
         Connexion connexion = new Connexion("1979897079");
-        cryptostarwars.moteur_binaire.boxes.SBox sbox = new cryptostarwars.moteur_binaire.boxes.SBox("C:/Users/Alexis Robin/Desktop/Cours IUT/S4/Cryptographie/Sujet 4 - Projet 1/Data/sbox.txt");
+        cryptostarwars.moteur_binaire.boxes.SBox sbox = new cryptostarwars.moteur_binaire.boxes.SBox("C:/Users/jules/Desktop/CryptoStarWars - Copie/src/cryptostarwars/donnees/sbox.txt");
         connexion.start();
         String messageRecu = connexion.recevoirMessage();
         while(!messageRecu.equals("END")){

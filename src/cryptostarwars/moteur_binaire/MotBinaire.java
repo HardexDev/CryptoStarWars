@@ -2,6 +2,8 @@ package cryptostarwars.moteur_binaire;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Représentation d'un mot binaire
@@ -143,8 +145,11 @@ public class MotBinaire {
      * @return le résultat du xor
      */
     public MotBinaire xor(MotBinaire mot2) {
-        MotBinaire mb = this;
+        MotBinaire mb = null;
+
+        mb = new MotBinaire(this.listeBits, this.taille);
         mb.getBitSet().xor(mot2.getBitSet());
+        
         return mb;
     }
     
@@ -154,10 +159,10 @@ public class MotBinaire {
      * @return le résultat de l'addition
      */
      public MotBinaire additionMod2p32(MotBinaire mot2) {
-        String resultat = ""; 
+        MotBinaire resultat = new MotBinaire(new BitSet(32), 32); 
         int retenue = 0;
 
-        for (int i = 31; i >= 0; i--) {
+        for (int i = 0; i < 32; i++) {
             int b1 = this.listeBits.get(i) == true ? 1 : 0;
             int b2 = mot2.getBitSet().get(i) == true ? 1 : 0;
             int res = b1 + b2 + retenue;
@@ -167,10 +172,11 @@ public class MotBinaire {
             else 
                 retenue = 0;
             
-            resultat += String.valueOf(res % 2);
+            if (res % 2 == 1)
+                resultat.getBitSet().set(i);
         }
          
-        return new MotBinaire(resultat);
+        return resultat;
      }
     
      /**
@@ -179,17 +185,18 @@ public class MotBinaire {
       * @return la liste des morceaux
       */
      public ArrayList<MotBinaire> scinder(int tailleMorceau) {
-        BitSet b1 = new BitSet();
-        BitSet b2 = new BitSet();
-        
-        for(int i=0; i<tailleMorceau; i++){
-           b1.set(i, this.listeBits.get(i));
-           b2.set(i, this.listeBits.get(i+tailleMorceau));
-        }
-        
         ArrayList<MotBinaire> list = new ArrayList<>();
-        list.add(new MotBinaire(b1, tailleMorceau));
-        list.add(new MotBinaire(b2, tailleMorceau));
+        
+        for (int i = 0; i < this.getTaille() / tailleMorceau; i++) {
+            BitSet b = new BitSet();
+            
+            for(int j = 0; j < tailleMorceau; j++){
+               
+               b.set(j, this.listeBits.get(i * tailleMorceau + j));
+            }
+            
+            list.add(new MotBinaire(b, tailleMorceau));
+         }
 
         return list;
     }
@@ -200,14 +207,12 @@ public class MotBinaire {
       * @return le résultat de la concaténation
       */
      public MotBinaire concatenation(MotBinaire mot) {
-        MotBinaire mb = new MotBinaire(new BitSet(64), 64);
+        MotBinaire mb = new MotBinaire(mot.getBitSet(), this.getTaille() + mot.getTaille());
         
-        for (int i = 0 ; i < 32; i++) {
-            mb.getBitSet().set(i, this.listeBits.get(i));
-            mb.getBitSet().set(i + 32, mot.getBitSet().get(i));
+        for (int i = 0 ; i < this.getTaille(); i++) {
+            mb.getBitSet().set(i + mot.taille, this.getBitSet().get(i));
         }
         
 	return mb;
      }
-     
 }

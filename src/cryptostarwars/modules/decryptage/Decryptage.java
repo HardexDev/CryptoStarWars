@@ -12,6 +12,7 @@ import cryptostarwars.moteur_binaire.boxes.PBox;
 import cryptostarwars.moteur_binaire.boxes.SBox;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.BitSet;
 
 /**
@@ -28,31 +29,41 @@ public class Decryptage implements Module {
      */
     static public MotBinaire F(MotBinaire M) throws FileNotFoundException {
         MotBinaire mb;
-        BitSet D = new BitSet();
+        MotBinaire D;
         MotBinaire mbPBox;
         PBox pBox = new PBox();
         MotBinaire mbSBox;
-        SBox sBox = new SBox("C:/Users/jules/Desktop/CryptoStarWars - Copie/src/cryptostarwars/donnees/sbox.txt");
+        SBox sBox = new SBox("C:/Users/jules/Desktop/CryptoStarWars/src/cryptostarwars/donnees/sbox.txt");
         
-        System.out.println("M = " + M.getBitSet());
+        D = M.scinder(8).get(3);
         
-        for (int i = 0; i < 8; i++) {
-            D.set(i, M.getBitSet().get(i));
-        }
+        mbPBox = pBox.appliquer(D);
         
-        System.out.println("D = " + D);
+        mbSBox = sBox.appliquer(mbPBox);
         
-        mbPBox = new MotBinaire(pBox.appliquer(new MotBinaire(D, 8)).getBitSet(), 8);
-        
-        System.out.println("PBox = " + mbPBox.getBitSet());
-        
-        mbSBox = new MotBinaire(sBox.appliquer(mbPBox).getBitSet(), 8);
-        
-        System.out.println("SBox = " + mbSBox.getBitSet());
-        
-        mb = M.additionMod2p32(new MotBinaire(mbSBox.getBitSet(), 8));
+        mb = mbSBox.additionMod2p32(M);
         
         return mb;
+    }
+    
+    static public MotBinaire decrypter(MotBinaire M, MotBinaire K) throws FileNotFoundException {
+        MotBinaire M1, M2, K1, K2, I1, I2, C, C1, C2;
+        BitSet bitSetM, bitSetK;
+        byte[] bytesM, bytesK;
+        
+        ArrayList<MotBinaire> mbM = M.scinder(32);
+        M1 = mbM.get(1);
+        M2 = mbM.get(0);
+        K1 = K.scinder(32).get(1);
+        K2 = K.scinder(32).get(0);
+
+        I1 = M2.xor(Decryptage.F(M1.xor(K1))); 
+        I2 = M1.xor(K1);
+        C1 = I2.xor(Decryptage.F(I1.xor(K2)));
+        C2 = I1.xor(K2);
+        C = C1.concatenation(C2);
+            
+        return C;
     }
 
     @Override
@@ -61,42 +72,30 @@ public class Decryptage implements Module {
         connexion.start();
         
         String message1, message2, messageDecode;
-        MotBinaire motBinaire1, motBinaire2;
-        BitSet bitSet1, bitSet2;
+        MotBinaire M, M1, M2, K, K1, K2, I1, I2, C, C1, C2;
+        BitSet bitSetM, bitSetK;
+        
+        message1 = connexion.recevoirMessage();
+        message2 = connexion.recevoirMessage();
         
         do {
-            message1 = connexion.recevoirMessage();
-            message2 = connexion.recevoirMessage();
             messageDecode = "";
             
-            bitSet1 = new BitSet(message1.length());
-            bitSet2 = new BitSet(message2.length());
+            bitSetM = new BitSet(message1.length());
+            bitSetK = new BitSet(message2.length());
             
-            // Conversion des messages en BitSet
-            for (int i = 0; i < message1.length(); i++) {
-                if (message1.charAt(i) == '1') {
-                    bitSet1.set(i);
-                }
-                if (message2.charAt(i) == '1') {
-                    bitSet2.set(i);
-                }
-            }
+            M = new MotBinaire(message1);
+            K = new MotBinaire(message2);
             
-            motBinaire1 = new MotBinaire(bitSet1, message1.length());
-            motBinaire2 = new MotBinaire(bitSet2, message1.length());
+            C = decrypter(M, K);
             
-            BitSet resultat = this.F(motBinaire1).getBitSet();
-            
-            // Conversion du BitSet en String
-            for (int i = 0; i < 64; i++) {
-                if (resultat.get(i)) 
-                    messageDecode += "1";
-                else
-                    messageDecode += "0";
-            }
+            messageDecode = C.toString();
             
             connexion.envoyerMessage(messageDecode);
-        } while (!message1.equals("END"));
+            
+            message1 = connexion.recevoirMessage();
+            message2 = connexion.recevoirMessage();
+        } while (!message1.equals("END") && !message2.equals("END"));
     }
 
     @Override
